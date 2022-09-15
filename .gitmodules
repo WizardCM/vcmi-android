@@ -1,7 +1,7 @@
 [submodule "ext/vcmi"]
 	path = ext/vcmi
-	url = https://github.com/vcmi/vcmi.git
-	branch = develop
+	url = https://github.com/wizardcm/vcmi.git
+	branch = surface-duo-2
 [submodule "ext/ff/ffmpeg"]
 	path = ext/ff/ffmpeg
 	url = https://git.ffmpeg.org/ffmpeg.git
