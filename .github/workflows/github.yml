@@ -1,4 +1,4 @@
-name: VCMI
+name: Build VCMI APK
 
 on:
     push:
@@ -8,6 +8,7 @@ on:
         - master
     pull_request:
     repository_dispatch:
+    workflow_dispatch:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -29,6 +30,11 @@ jobs:
     - name: Update VCMI Sources
       run: |
         git submodule update --init --remote --recursive ${{github.workspace}}/ext/vcmi
+
+    - name: Setup build environment
+      id: setup
+      run: |
+        echo "::set-output name=commitHash::$(cd ${{github.workspace}}/ext/vcmi; git rev-parse --short=9 HEAD)"
 
     - name: Dependencies
       run: |
@@ -58,7 +64,7 @@ jobs:
     - name: Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: vcmi.apk
+        name: 'vcmi-${{ steps.setup.outputs.commitHash }}.apk'
         path: ${{github.workspace}}/project/vcmi-app/build/outputs/apk/AllTargets/release/*.apk
   
     - name: Upload build
@@ -74,4 +80,4 @@ jobs:
         channel: '#notifications'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      if: always()
+      if: ${{ always() && env.SLACK_WEBHOOK_URL }}
