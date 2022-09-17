@@ -51,7 +51,15 @@ jobs:
 #        echo VCMI_PACKAGE_NAME_SUFFIX="$VCMI_PACKAGE_NAME_SUFFIX" >> $GITHUB_ENV
 #      env:
 #        PULL_REQUEST: ${{ github.event.pull_request.number }}
-
+    - name: Cache Build
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     - name: Build
       run: |
         chmod +x ./project/gradlew
